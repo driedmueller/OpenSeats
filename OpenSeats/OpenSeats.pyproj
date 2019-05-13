@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>c8136bd2-e18a-49a1-b2d8-2dc77044492c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>gui.py</StartupFile>
+    <StartupFile>OpenSeats.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,6 +25,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="guiTest1.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="emailSeats.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="OpenSeats.py" />

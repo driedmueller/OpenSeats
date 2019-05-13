@@ -26,16 +26,15 @@ mainframe.grid(column=0, row=0)
 semester = StringVar()
 course = StringVar()
 
-#ttk.OptionMenu(mainframe, semester, SEMESTERS[0], *SEMESTERS).grid(row=1, column=2)
+ttk.Label(mainframe, text="Enter Term:").grid(row=1, column=1)
+ttk.Label(mainframe, text="Enter CRN:").grid(row=2, column=1)
 semesterCombo = ttk.Combobox(mainframe, state='readonly', textvariable=semester, 
-                             values=('201940', '201970', '201980')).grid(row=1, column=2)
-#ttk.OptionMenu(mainframe, course, COURSES[0], *COURSES).grid(row=2, column=2)
+                             values=('201940', '201970')).grid(row=1, column=2)
 courseCombo = ttk.Combobox(mainframe, state='readonly', textvariable=course, 
                            values=('CHEM', 'ENGL', 'MATH')).grid(row=2, column=2)
 ttk.Button(mainframe, text="Okay", command=ok).grid(row=3, column=2)
 
 #combo['values'] = ('201940', '201970', '201980')
-#combo.grid(row=1, column=3)
 
 #for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
 
