@@ -33,7 +33,6 @@ html = requests.get(f"https://ssbprod.atu.edu/pls/PROD/bwckschd.p_disp_detail_sc
         </tbody>
     </table>"""
 
-
 soup = BeautifulSoup(html, "html.parser")
 table = soup.find("table", attrs={"summary":"This layout table is used to present the seating numbers."})
 td_list = table.findAll("td")
