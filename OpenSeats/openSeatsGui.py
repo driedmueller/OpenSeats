@@ -8,9 +8,9 @@ def getSeats(*args):
 	term = semester.get()
 	crn = course.get()
 
-	#html = requests.get(f"https://ssbprod.atu.edu/pls/PROD/bwckschd.p_disp_detail_sched?term_in={term}&crn_in={crn}").text
+	html = requests.get(f"https://ssbprod.atu.edu/pls/PROD/bwckschd.p_disp_detail_sched?term_in={term}&crn_in={crn}").text
 
-	html="""
+	"""html=
 		<table class="datadisplaytable" summary="This layout table is used to present the seating numbers." width="100%">
 			<caption class="captiontext">Registration Availability</caption>
 			<tbody>
@@ -23,8 +23,8 @@ def getSeats(*args):
 				<tr>
 					<th class="ddlabel" scope="row" style="background: none; color: rgb(0, 0, 0);"><span class="fieldlabeltext">Seats</span></th>
 					<td class="dddefault">20</td>
-					<td class="dddefault">20</td>
-					<td class="dddefault">0</td>
+					<td class="dddefault">15</td>
+					<td class="dddefault">5</td>
 				</tr>
 			</tbody>
 		</table>

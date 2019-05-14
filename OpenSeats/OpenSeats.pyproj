@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>c8136bd2-e18a-49a1-b2d8-2dc77044492c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>OpenSeats.py</StartupFile>
+    <StartupFile>openSeatsConsole.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="gui.py">
+    <Compile Include="guiTest0.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="guiTest1.py">
@@ -30,7 +30,10 @@
     <Compile Include="emailSeats.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenSeats.py" />
+    <Compile Include="openSeatsConsole.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="openSeatsGui.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
