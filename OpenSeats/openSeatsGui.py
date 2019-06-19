@@ -1,4 +1,4 @@
-import requests
+import requests, csv
 from bs4 import BeautifulSoup
 from tkinter import *
 from tkinter import ttk
@@ -36,6 +36,16 @@ def getSeats(*args):
 	seatsRemaining = td_list[3].text
 	seats.set(seatsRemaining)
 
+def addEmail(*args):
+    mail = email.get()
+    term = semester.get()
+    crn = course.get()
+
+    with open('input.csv', 'a', newline='') as file:
+        write = csv.writer(file)
+        write.writerow([mail, term, crn])
+
+
 
 root = Tk()
 root.title("Remaining Seats")
@@ -46,13 +56,17 @@ mainframe.grid(column=0, row=0)
 semester = StringVar()
 course = StringVar()
 seats = StringVar()
+email = StringVar()
 
-ttk.Label(mainframe, text="Enter Term:").grid(row=1, column=1)
-ttk.Label(mainframe, text="Enter CRN:").grid(row=2, column=1)
+ttk.Label(mainframe, text="Enter Term:").grid(row=1, column=1, sticky=E)
+ttk.Label(mainframe, text="Enter CRN:").grid(row=2, column=1, sticky=E)
 semesterEntry = ttk.Entry(mainframe, textvariable=semester).grid(row=1, column=2)
 courseEntry = ttk.Entry(mainframe, textvariable=course).grid(row=2, column=2)
 ttk.Label(mainframe, text="Remaining Seats:").grid(row=3, column=1)
 ttk.Label(mainframe, textvariable=seats).grid(row=3, column=2)
 ttk.Button(mainframe, text="Show me the seats!", command=getSeats).grid(row=4, column=2)
+ttk.Label(mainframe, text="E-mail me when seats are open:").grid(row=5, column=1, columnspan=2, sticky=W+S)
+emailEntry = ttk.Entry(mainframe, textvariable=email).grid(row=6, column=1, columnspan=2, sticky=W)
+ttk.Button(mainframe, text="Add e-mail", command=addEmail).grid(row=6, column=2, sticky=E)
 
 root.mainloop()

@@ -1,0 +1,14 @@
+Python Script to check open seats for classes
+
+User GUI
+-User enters Term and CRN of course (add if statement for typos "Not a class!")
+	-If class is closed they can checkbox to get e-mail when it opens
+	(Will need a seperate script constantly running to check this)
+		-User enters e-mail
+			-E-mail goes into CSV file (e-mail,term,CRN)
+			-Add check to see if the user has already requested that class
+
+Seperate script to constantly check seat availability
+-Loop to check every 30 mins/1 hour
+	-If 'Act' is > 0
+		-send e-mail (but only once)

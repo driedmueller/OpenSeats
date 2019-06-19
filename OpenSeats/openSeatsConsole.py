@@ -4,9 +4,6 @@ import time
 import sys
 
 def showSeats(term, crn, course):
-    print("\n-----------------------------")
-    print(f"Semester: {term}")
-    print(f"Course: {course}")
 
     html = requests.get(f"https://ssbprod.atu.edu/pls/PROD/bwckschd.p_disp_detail_sched?term_in={term}&crn_in={crn}").text
 
@@ -34,6 +31,9 @@ def showSeats(term, crn, course):
     table = soup.find("table", attrs={"summary":"This layout table is used to present the seating numbers."})
     td_list = table.findAll("td")
     seatsRemaining = td_list[3].text
+    print("\n-----------------------------")
+    print(f"Semester: {term}")
+    print(f"Course: {course}")
     print(f"Open Seats: {seatsRemaining}")
     print("-----------------------------")
 
