@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>c8136bd2-e18a-49a1-b2d8-2dc77044492c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>openSeatsGui.py</StartupFile>
+    <StartupFile>readMail.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,12 +24,6 @@
     <Compile Include="courseFinderScrape.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="guiTest0.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="guiSample.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="emailSeats.py">
       <SubType>Code</SubType>
     </Compile>
@@ -37,6 +31,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="openSeatsGui.py" />
+    <Compile Include="readMail.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="yagmailSeats.py">
       <SubType>Code</SubType>
     </Compile>
