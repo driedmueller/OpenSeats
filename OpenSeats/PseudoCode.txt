@@ -12,3 +12,17 @@ Seperate script to constantly check seat availability
 -Loop to check every 30 mins/1 hour
 	-If 'Act' is > 0
 		-send e-mail (but only once)
+
+---------------------------------------------------------------------------------
+E-mail Method
+-User e-mails openseat1909@gmail.com
+	-Subject must be in specific format: term [space] crn. Ex: 202020 20520
+	-E-mail reply confirming term & crn
+	>>What about wrong term & crn?
+
+-Script constantly running to look for new e-mails
+	-if subject starts with 201980, 202020, 202040
+	-then add e-mail, term, and crn to csv file (change to database?)
+-Another script constantly running to check for open seats 
+	-if Rem > 0, then e-mail users
+	-Remove users from csv
