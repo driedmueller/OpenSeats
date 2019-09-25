@@ -1,4 +1,4 @@
-import imaplib, email, keyring, re, csv, requests, yagmail
+import imaplib, email, keyring, re, csv, requests, yagmail, time
 from bs4 import BeautifulSoup
 
 def getSeats(term, crn):
@@ -30,7 +30,7 @@ def sendConfirm(term, crn, email, seats, courseName, section):
         semester = "Spring"
     elif (term[4] == "4"):
         semester = "Summer"
-    body = f"""Your request has been received for:
+    body = f"""Your request has been received and we will notify you when a seat opens for:
     -----------------------------
     Term:\t{semester} {year}
     CRN:\t{crn}
@@ -64,11 +64,13 @@ def sendOops(term, crn, email):
             )
 
 def sendDup(term, crn, email):
-    body = """We already have a request on file from you for:
+    body = f"""We already have a request on file from you for:
     -----------------------------
     Term:\t{term}
     CRN:\t{crn}
     -----------------------------
+
+    You will be notified of any open seats when they are available.
     """
 
     with yagmail.SMTP("openseat1909@gmail.com") as yag:
@@ -81,7 +83,7 @@ def sendDup(term, crn, email):
 email_user = 'openseat1909@gmail.com'
 email_password = keyring.get_password('yagmail', 'openseat1909@gmail.com')
 
-try:
+def main():   
     mail = imaplib.IMAP4_SSL('imap.gmail.com') # port 993
     mail.login(email_user, email_password)
     mail.select('Inbox')
@@ -127,7 +129,7 @@ try:
                                 print(sender)
                                 print(email_subject)
                                 # Send e-mail notifying of wrong term/crn
-                                #sendOops(term, crn, sender)
+                                sendOops(term, crn, sender)
                             else:
                                 writer.writerow([term, crn, sender])
                                 # Possibly send this as debug file
@@ -136,7 +138,7 @@ try:
                                 print(email_subject)
 
                                 # Send e-mail confirming addition to csv file
-                                #sendConfirm(term, crn, sender, seats, courseName, section)
+                                sendConfirm(term, crn, sender, seats, courseName, section)
                         elif (newInfo == False):
                             # Keep following two lines for debugging; possibly send debug info to another file "debug.csv"
                             print("---Data already in file---")
@@ -144,8 +146,9 @@ try:
                             print(email_subject)
 
                             # Send e-mail notifying of duplicate request
-                            #sendDup(term, crn, sender)
+                            sendDup(term, crn, sender)
 
-except Exception as e:
-    print(str(e))
-
+while 1:
+    print("\n------Checking------\n")
+    main()
+    time.sleep(120)
