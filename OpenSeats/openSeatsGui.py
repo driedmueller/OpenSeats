@@ -46,8 +46,8 @@ def addEmail(*args):
 
     with open('input.csv', 'a', newline='') as file:
         write = csv.writer(file)
-        write.writerow([mail, term, crn])
-    confirm.set("You have been added to the list!")
+        write.writerow([term, crn, mail])
+    confirm.set("You have been added to the list!\nYou will receive a confirmation e-mail soon.")
 
 root = Tk()
 root.title("Remaining Seats")

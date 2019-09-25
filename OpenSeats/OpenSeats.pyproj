@@ -31,6 +31,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="openSeatsGui.py" />
+    <Compile Include="quickstart.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="readMail.py">
       <SubType>Code</SubType>
     </Compile>
@@ -39,6 +42,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="input1 - Copy.csv" />
     <Content Include="input.csv" />
     <Content Include="PseudoCode.txt" />
   </ItemGroup>

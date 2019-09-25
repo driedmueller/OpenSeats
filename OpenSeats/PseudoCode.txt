@@ -26,3 +26,5 @@ E-mail Method
 -Another script constantly running to check for open seats 
 	-if Rem > 0, then e-mail users
 	-Remove users from csv
+
+-Run all this using Portable VirtualBox/Linux server??
