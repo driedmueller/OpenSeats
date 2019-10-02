@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>c8136bd2-e18a-49a1-b2d8-2dc77044492c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>readMail.py</StartupFile>
+    <StartupFile>OpenSeatsFinal.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,6 +28,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="openSeatsConsole.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenSeatsFinal.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="openSeatsGui.py" />

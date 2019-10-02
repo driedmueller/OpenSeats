@@ -19,6 +19,7 @@ def getSeats(term, crn):
     table = soup.find("table", attrs={"summary":"This table is used to present the detailed class information."})
     if table is None:
         courseName = "Wrong term/CRN"
+        section = "Wrong term/CRN"
     else:
         th_list = table.findAll("th")
         courseInfo = th_list[0].text
@@ -26,7 +27,7 @@ def getSeats(term, crn):
         section = courseInfo.split("-", 4)[3]
     return seatsRemaining, courseName, section
 
-def main():
+def emailSeats():
     # Save csv file in a list called data
     with open("input.csv") as file:
         data = list(csv.reader(file))
@@ -42,25 +43,34 @@ def main():
                 print("\n---Keep---")
                 writer.writerow(row)
             elif (seats > "0"):
-                sendEmail(term, crn, email)
-                #print("\n---Email---")
-
+                sendOpenSeat(term, crn, email, seats, courseName, section)
           
-def sendEmail(term, crn, email):
-    receiver = email
+def sendOpenSeat(term, crn, email, seats, courseName, section):
+    year = term[:4]
+    if (term[4] == "7"):
+        semester = "Fall"
+    elif (term[4] == "2"):
+        semester = "Spring"
+    elif (term[4] == "4"):
+        semester = "Summer"
     body = f"""The class you requested is currently open:
 
 -----------------------------
-Semester: {term}
-CRN: {crn}
------------------------------ """
+Term:\t{semester} {year}
+CRN:\t{crn}
+Course:\t{courseName}
+Sec: {section}
+Seats:\t{seats}
+----------------------------- 
+
+Your e-mail has been removed from the mailing list."""
     print(body)
 
     #with yagmail.SMTP("openseat1909@gmail.com") as yag:
     #    yag.send(
-    #        to=receiver,
-    #        subject=f"Open seat in {crn}",
+    #        to=email,
+    #        subject="Open Seat",
     #        contents=body
     #        )
 
-main()
+emailSeats()

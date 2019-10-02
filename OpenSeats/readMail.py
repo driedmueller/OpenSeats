@@ -88,7 +88,7 @@ def main():
     mail.login(email_user, email_password)
     mail.select('Inbox')
 
-    type, data = mail.search(None, 'UNSEEN') # UNSEEN only checks unread e-mails
+    type, data = mail.search(None, 'UNSEEN') # UNSEEN only grabs unread e-mails
     mail_ids = data[0]
     id_list = mail_ids.split()
     latest_email = ''
@@ -147,6 +147,9 @@ def main():
 
                             # Send e-mail notifying of duplicate request
                             sendDup(term, crn, sender)
+
+    mail.close()
+    mail.logout()
 
 while 1:
     print("\n------Checking------\n")
