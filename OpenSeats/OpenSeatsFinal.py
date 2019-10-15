@@ -22,7 +22,7 @@ def getSeats(term, crn):
         section = courseInfo.split("-", 4)[3]
     return seatsRemaining, courseName, section
 
-def sendConfirm(term, crn, email, seats, courseName, section):
+def sendConfirm(term, crn, eAddress, seats, courseName, section):
     year = term[:4]
     if (term[4] == "7"):
         semester = "Fall"
@@ -43,47 +43,47 @@ def sendConfirm(term, crn, email, seats, courseName, section):
 
     with yagmail.SMTP("openseat1909@gmail.com") as yag:
         yag.send(
-            to=email,
+            to=eAddress,
             subject="Confirmation",
             contents=body
             )
 
-def sendOops(term, crn, email):
-    body = f"""Oops! Your request contained an invalid Term or CRN.
+def sendOops(term, crn, eAddress):
+    body = f"""Oops! Your request contained an invalid CRN.
 
-    One of the following is incorrect:
-    -----------------------------
+    The following CRN is incorrect:
+    ---------------------------------------
     Term:\t{term}
     CRN:\t{crn}
-    -----------------------------
+    ---------------------------------------
 
-    Please resubmit your request with a valid term or CRN.  Thank you!
+    Please resubmit your request with a valid CRN.  Thank you!
     """
 
     with yagmail.SMTP("openseat1909@gmail.com") as yag:
         yag.send(
-            to=email,
+            to=eAddress,
             subject="Invalid Term/CRN",
             contents=body
             )
 
-def sendDup(term, crn, email, seats, courseName, section):
+def sendDup(term, crn, eAddress, seats, courseName, section):
     body = f"""We already have a request on file from you for:
 
-    -----------------------------
+    ---------------------------------------
     Course:\t{courseName}
     Sec: {section}
     Seats:\t{seats}
     Term:\t{term}
     CRN:\t{crn}
-    -----------------------------
+    ---------------------------------------
 
     You will be notified when a seat is available.  Thank you!
     """
 
     with yagmail.SMTP("openseat1909@gmail.com") as yag:
         yag.send(
-            to=email,
+            to=eAddress,
             subject="Duplicate Request",
             contents=body
             )
@@ -125,7 +125,7 @@ def main():
                         if not data:
                             writer.writerow([term, crn, sender])
                             # Possibly send this as debug file
-                            print("---New Row Added---")
+                            print("\n---New Row Added---")
                             print(sender)
                             print(email_subject)
                             seats, courseName, section = getSeats(term, crn)
@@ -141,26 +141,37 @@ def main():
                                     newInfo = True
                         
                             seats, courseName, section = getSeats(term, crn)
+                            #Get current time for datestamps
+                            now = time.time()
                             # if data not already in file add data to csv and email a confirmation
                             if (newInfo):
                                 # Check if invalid term/crn was requested
                                 if (seats == "Invalid term/CRN"):
-                                    print("---Invalid term/CRN---")
+                                    print("\n---Invalid term/CRN---")
+                                    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
                                     print(sender)
                                     print(email_subject)
                                     # Send e-mail notifying of Invalid term/crn
                                     sendOops(term, crn, sender)
+                                elif (seats > "0"):
+                                    print("\n---Data Not Added: Class Open---")
+                                    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
+                                    print(sender)
+                                    print(email_subject)
+                                    sendOpenSeat(term, crn, sender, seats, courseName, section)
                                 else:
                                     writer.writerow([term, crn, sender])
                                     # Possibly send this as debug file
-                                    print("---New Row Added---")
+                                    print("\n---New Row Added---")
+                                    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
                                     print(sender)
                                     print(email_subject)
                                     # Send e-mail confirming addition to csv file
                                     sendConfirm(term, crn, sender, seats, courseName, section)
                             elif (newInfo == False):
                                 # Keep following two lines for debugging; possibly send debug info to another file "debug.csv"
-                                print("---Data already in file---")
+                                print("\n---Data already in file---")
+                                print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
                                 print(sender)
                                 print(email_subject)
                                 # Send e-mail notifying of duplicate request
@@ -179,15 +190,15 @@ def emailSeats():
         for row in data:
             term = row[0]
             crn = row[1]
-            email = row[2]
+            eAddress = row[2]
             seats, courseName, section = getSeats(term, crn)
             if (seats <= "0"):
                 #print("\n---Keep---")
                 writer.writerow(row)
             elif (seats > "0"):
-                sendOpenSeat(term, crn, email, seats, courseName, section)
-          
-def sendOpenSeat(term, crn, email, seats, courseName, section):
+                sendOpenSeat(term, crn, eAddress, seats, courseName, section)
+
+def sendOpenSeat(term, crn, eAddress, seats, courseName, section):
     year = term[:4]
     if (term[4] == "7"):
         semester = "Fall"
@@ -209,12 +220,15 @@ Your e-mail has been removed from the mailing list.  Thank you!"""
 
     with yagmail.SMTP("openseat1909@gmail.com") as yag:
         yag.send(
-            to=email,
+            to=eAddress,
             subject="Open Seat",
             contents=body
             )
+    #Get current time for datestamp
+    now = time.time()
     print("\n---Sent open email---")
-    print(email, term, crn)
+    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
+    print(eAddress, term, crn)
 
 while 1:
     print("\n******Checking Gmail******")

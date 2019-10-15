@@ -9,7 +9,7 @@ User GUI
 			-Add check to see if the user has already requested that class
 
 Seperate script to constantly check seat availability
--Loop to check every 30 mins/1 hour
+-Loop to check every 5-10 mins
 	-If 'Act' is > 0
 		-send e-mail (but only once)
 
@@ -28,3 +28,7 @@ E-mail Method
 	-Remove users from csv
 
 -Run all this using Portable VirtualBox/Linux server??
+
+To do:
+-Count how many requested specific term/crn
+-Add a remove function (user can e-mail a remove request)
