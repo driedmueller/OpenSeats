@@ -1,5 +1,9 @@
-import imaplib, email, keyring, re, csv, requests, yagmail, time
+import imaplib, email, keyring, re, csv, requests, yagmail, time, logging
 from bs4 import BeautifulSoup
+
+logging.basicConfig(filename='events.log',level=logging.DEBUG,format='%(asctime)s %(message)s',datefmt='%m/%d/%Y %I:%M:%S %p')
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 def getSeats(term, crn):
     html = requests.get(f"https://ssbprod.atu.edu/pls/PROD/bwckschd.p_disp_detail_sched?term_in={term}&crn_in={crn}").text
@@ -47,6 +51,8 @@ def sendConfirm(term, crn, eAddress, seats, courseName, section):
             subject="Confirmation",
             contents=body
             )
+    logging.info('---Sent Confirmation---')
+    print("---Sent Confirmation---")
 
 def sendOops(term, crn, eAddress):
     body = f"""Oops! Your request contained an invalid CRN.
@@ -63,9 +69,11 @@ def sendOops(term, crn, eAddress):
     with yagmail.SMTP("openseat1909@gmail.com") as yag:
         yag.send(
             to=eAddress,
-            subject="Invalid Term/CRN",
+            subject="Invalid CRN",
             contents=body
             )
+    logging.info('---Sent Invalid CRN---')
+    print("---Sent Invalid CRN---")
 
 def sendDup(term, crn, eAddress, seats, courseName, section):
     body = f"""We already have a request on file from you for:
@@ -87,6 +95,8 @@ def sendDup(term, crn, eAddress, seats, courseName, section):
             subject="Duplicate Request",
             contents=body
             )
+    logging.info('---Sent Duplicate---')
+    print("---Sent Duplicate---")
 
 email_user = 'openseat1909@gmail.com'
 email_password = keyring.get_password('yagmail', 'openseat1909@gmail.com')
@@ -121,16 +131,36 @@ def main():
                     with open('input.csv', 'a', newline='') as file:
                         writer = csv.writer(file)
 
-                        # If list is empty, go ahead and just write a new row in csv file
+                        # If list is empty
                         if not data:
-                            writer.writerow([term, crn, sender])
-                            # Possibly send this as debug file
-                            print("\n---New Row Added---")
-                            print(sender)
-                            print(email_subject)
                             seats, courseName, section = getSeats(term, crn)
-                            # Send e-mail confirming addition to csv file
-                            sendConfirm(term, crn, sender, seats, courseName, section)
+                            #Get current time for datestamps
+                            now = time.time()
+                            if (seats == "Invalid term/CRN"):
+                                logging.info('---Invalid term/CRN--- SENDER: %s, SUBJECT: %s', sender, email_subject)
+                                print("\n---Invalid term/CRN---")
+                                print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
+                                print(sender)
+                                print(email_subject)
+                                # Send e-mail notifying of Invalid term/crn
+                                sendOops(term, crn, sender)
+                            elif (seats > "0"):
+                                logging.info('---Data Not Added: Class Open--- SENDER: %s, SUBJECT: %s', sender, email_subject)
+                                print("\n---Data Not Added: Class Open---")
+                                print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
+                                print(sender)
+                                print(email_subject)
+                                sendOpenSeat(term, crn, sender, seats, courseName, section)
+                            else:
+                                writer.writerow([term, crn, sender])
+                                # Possibly send this as debug file
+                                logging.info('---New Row Added--- SENDER: %s, SUBJECT: %s', sender, email_subject)
+                                print("\n---New Row Added---")
+                                print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
+                                print(sender)
+                                print(email_subject)
+                                # Send e-mail confirming addition to csv file
+                                sendConfirm(term, crn, sender, seats, courseName, section)
                         else:
                             # Check csv file to see if requested term, crn, sender is already in file
                             for row in data:
@@ -147,6 +177,7 @@ def main():
                             if (newInfo):
                                 # Check if invalid term/crn was requested
                                 if (seats == "Invalid term/CRN"):
+                                    logging.info('---Invalid term/CRN--- SENDER: %s, SUBJECT: %s', sender, email_subject)
                                     print("\n---Invalid term/CRN---")
                                     print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
                                     print(sender)
@@ -154,6 +185,7 @@ def main():
                                     # Send e-mail notifying of Invalid term/crn
                                     sendOops(term, crn, sender)
                                 elif (seats > "0"):
+                                    logging.info('---Data Not Added: Class Open--- SENDER: %s, SUBJECT: %s', sender, email_subject)
                                     print("\n---Data Not Added: Class Open---")
                                     print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
                                     print(sender)
@@ -162,6 +194,7 @@ def main():
                                 else:
                                     writer.writerow([term, crn, sender])
                                     # Possibly send this as debug file
+                                    logging.info('---New Row Added--- SENDER: %s, SUBJECT: %s', sender, email_subject)
                                     print("\n---New Row Added---")
                                     print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
                                     print(sender)
@@ -170,6 +203,7 @@ def main():
                                     sendConfirm(term, crn, sender, seats, courseName, section)
                             elif (newInfo == False):
                                 # Keep following two lines for debugging; possibly send debug info to another file "debug.csv"
+                                logging.info('---Data already in file--- SENDER: %s, SUBJECT: %s', sender, email_subject)
                                 print("\n---Data already in file---")
                                 print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
                                 print(sender)
@@ -226,16 +260,21 @@ Your e-mail has been removed from the mailing list.  Thank you!"""
             )
     #Get current time for datestamp
     now = time.time()
+    logging.info('---Sent open email---')
     print("\n---Sent open email---")
     print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
     print(eAddress, term, crn)
 
 while 1:
+    now = time.time()
     print("\n******Checking Gmail******")
+    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
     main()
     print("\n-Wait-")
     time.sleep(120)
+    now = time.time()
     print("\n******Checking CSV******")
+    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
     emailSeats()
     print("\n-Wait-")
     time.sleep(120)

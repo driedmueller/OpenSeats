@@ -45,6 +45,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="events.log" />
     <Content Include="input1 - Copy.csv" />
     <Content Include="input.csv" />
     <Content Include="PseudoCode.txt" />
